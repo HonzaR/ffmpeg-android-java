@@ -18,10 +18,6 @@ android {
         jni.srcDirs = [] //disable automatic ndk-build
     }
 
-    packagingOptions {
-        exclude 'META-INF/services/javax.annotation.processing.Processor'
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -32,11 +28,6 @@ android {
 }
 
 dependencies {
-    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.jakewharton:butterknife:5.1.2'
-    compile 'com.facebook.stetho:stetho:1.5.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
     compile project(':FFmpegAndroid')
 }

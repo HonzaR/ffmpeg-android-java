@@ -4,14 +4,13 @@
 
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Ffmpeg test"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Home"
-            android:label="@string/app_name" >
+            android:name=".MainActivity"
+            android:label="Ffmpeg test" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
