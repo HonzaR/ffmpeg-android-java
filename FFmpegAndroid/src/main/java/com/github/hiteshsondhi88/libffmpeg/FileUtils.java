@@ -19,15 +19,15 @@ class FileUtils {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
 
-    static boolean copyBinaryFromAssetsToData(Context context, String fileNameFromAssets, String outputFileName) {
+    static boolean copyBinaryFromExternalToData(Context context, String fileNameFromExternal, String outputFileName) {
 		
 		// create files directory under /data/data/package name
 		File filesDirectory = getFilesDirectory(context);
 		
 		InputStream is;
 		try {
-			is = context.getAssets().open(fileNameFromAssets);
-			// copy ffmpeg file from assets to files dir
+			File externalFile = new File(context.getExternalFilesDir(null) + "/" + fileNameFromExternal);
+			is = new FileInputStream(externalFile);
 			final FileOutputStream os = new FileOutputStream(new File(filesDirectory, outputFileName));
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 			
@@ -41,10 +41,22 @@ class FileUtils {
 			
 			return true;
 		} catch (IOException e) {
-			Log.e("issue in coping binary from assets to data. ", e);
+			Log.e("issue in coping binary from external to data. ", e);
 		}
         return false;
 	}
+
+    static boolean checkFileExists(File file) {
+        try {
+            if(file.exists()) {
+                return true;
+            }
+        } catch (Exception var3) {
+            Log.e(var3);
+        }
+
+        return false;
+    }
 
 	static File getFilesDirectory(Context context) {
 		// creates files directory under data/data/package name

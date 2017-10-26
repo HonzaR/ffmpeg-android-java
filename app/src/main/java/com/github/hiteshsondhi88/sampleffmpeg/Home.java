@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,17 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import dagger.ObjectGraph;
-
+import com.facebook.stetho.Stetho;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import dagger.ObjectGraph;
 
 public class Home extends Activity implements View.OnClickListener {
 
@@ -50,6 +50,7 @@ public class Home extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_home);
         ButterKnife.inject(this);
         ObjectGraph.create(new DaggerDependencyModule(this)).inject(this);
+        Stetho.initializeWithDefaults(this);
 
         loadFFMpegBinary();
         initUI();
@@ -66,8 +67,9 @@ public class Home extends Activity implements View.OnClickListener {
         try {
             ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
                 @Override
-                public void onFailure() {
-                    showUnsupportedExceptionDialog();
+                public void onResult(int state) {
+                    if (state >= 610)
+                        showUnsupportedExceptionDialog();
                 }
             });
         } catch (FFmpegNotSupportedException e) {

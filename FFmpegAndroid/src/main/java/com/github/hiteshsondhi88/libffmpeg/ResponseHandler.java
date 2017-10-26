@@ -1,15 +1,15 @@
 package com.github.hiteshsondhi88.libffmpeg;
 
-abstract interface ResponseHandler {
+interface ResponseHandler {
 
     /**
      * on Start
      */
-    public void onStart();
+    void onStart();
 
     /**
      * on Finish
      */
-    public void onFinish();
+    void onFinish();
 
 }

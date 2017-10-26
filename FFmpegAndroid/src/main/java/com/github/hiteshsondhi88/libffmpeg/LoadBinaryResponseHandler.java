@@ -3,22 +3,11 @@ package com.github.hiteshsondhi88.libffmpeg;
 public class LoadBinaryResponseHandler implements FFmpegLoadBinaryResponseHandler {
 
     @Override
-    public void onFailure() {
-
-    }
+    public void onResult(int state) {}
 
     @Override
-    public void onSuccess() {
-
-    }
+    public void onStart() {}
 
     @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onFinish() {
-
-    }
+    public void onFinish() {}
 }
