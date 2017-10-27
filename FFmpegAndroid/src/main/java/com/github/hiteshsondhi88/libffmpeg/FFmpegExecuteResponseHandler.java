@@ -1,6 +1,6 @@
 package com.github.hiteshsondhi88.libffmpeg;
 
-public interface FFmpegExecuteResponseHandler extends ResponseHandler {
+public interface FFmpegExecuteResponseHandler {
 
     /**
      * on Success
@@ -20,4 +20,13 @@ public interface FFmpegExecuteResponseHandler extends ResponseHandler {
      */
     void onFailure(String message);
 
+    /**
+     * on Start
+     */
+    void onStart();
+
+    /**
+     * on Finish
+     */
+    void onFinish();
 }
