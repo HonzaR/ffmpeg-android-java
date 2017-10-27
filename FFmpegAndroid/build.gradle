@@ -22,22 +22,13 @@ android {
         jniLibs.srcDirs = ['libs']
     }
 
-    signingConfigs {
-        release {
-            storeFile file("keystore.jks")
-            storePassword "ffmpeg"
-            keyAlias "ffmpeg"
-            keyPassword "ffmpeg"
-        }
-    }
     buildTypes {
         release {
             minifyEnabled false
-            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
+
     buildToolsVersion '26.0.2'
 }
 

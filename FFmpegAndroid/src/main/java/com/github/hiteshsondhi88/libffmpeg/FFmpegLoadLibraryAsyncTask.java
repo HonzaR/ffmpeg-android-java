@@ -27,13 +27,16 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
     private final String loadingTitle;
     private final String loadingMsg;
+    private final Context context;
     private Long downloadReference;
 
-    FFmpegLoadLibraryAsyncTask(String cpuArchNameFromAssets,
+    FFmpegLoadLibraryAsyncTask(Context context,
+                               String cpuArchNameFromAssets,
                                FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler,
                                String loadingTitle,
                                String loadingMsg)
     {
+        this.context = context;
         this.cpuArchName = cpuArchNameFromAssets;
         this.ffmpegLoadBinaryResponseHandler = ffmpegLoadBinaryResponseHandler;
         this.loadingTitle = loadingTitle;
@@ -43,7 +46,6 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params)
     {
-        Context context = App.get().getApplicationContext();
         File ffmpegFile = new File(FileUtils.getFFmpeg(context));
 
         if (ffmpegFile.exists() && Util.isDeviceFFmpegVersionOld(context) && !ffmpegFile.delete()) {
@@ -145,7 +147,7 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                                 FileUtils.FFMPEG_FILE_NAME);
                     }
 
-                    FileUtils.removeFromExternal(App.get().getApplicationContext());
+                    FileUtils.removeFromExternal(context);
                     ffmpegLoadBinaryResponseHandler.onLoadResult(SUCCESS_DOWNLOADING_DONE);
 
                     File ffmpegFile = new File(FileUtils.getFFmpeg(context));

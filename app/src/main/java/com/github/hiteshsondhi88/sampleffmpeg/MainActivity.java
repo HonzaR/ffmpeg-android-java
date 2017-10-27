@@ -11,13 +11,5 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            FFmpeg ffmpeg = FFmpeg.getInstance();
-            ffmpeg.loadBinary(null,
-                    "", "");
-        } catch (Exception e) {
-            Log.d("ddd", "ddd");
-        }
     }
 }

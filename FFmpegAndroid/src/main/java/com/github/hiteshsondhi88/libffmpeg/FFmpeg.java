@@ -24,7 +24,7 @@ public class FFmpeg implements FFmpegInterface {
 
     private static final long MINIMUM_TIMEOUT = 10 * 1000;
 
-    private final Context context;
+    private Context context;
     private FFmpegExecuteAsyncTask ffmpegExecuteAsyncTask;
     private FFmpegLoadLibraryAsyncTask ffmpegLoadLibraryAsyncTask;
 
@@ -33,8 +33,6 @@ public class FFmpeg implements FFmpegInterface {
     private static FFmpeg instance = null;
 
     private FFmpeg() {
-        this.context = App.get().getApplicationContext();
-        Log.setDEBUG(Util.isDebug(this.context));
     }
 
     public static FFmpeg getInstance() {
@@ -45,7 +43,11 @@ public class FFmpeg implements FFmpegInterface {
     }
 
     @Override
-    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) {
+    public void loadBinary(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg)
+    {
+        this.context = context;
+        Log.setDEBUG(Util.isDebug(this.context));
+
         String cpuArchNameFromAssets = null;
         switch (CpuArchHelper.getCpuArch()) {
             case x86:
@@ -61,7 +63,7 @@ public class FFmpeg implements FFmpegInterface {
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
+            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
             ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);
