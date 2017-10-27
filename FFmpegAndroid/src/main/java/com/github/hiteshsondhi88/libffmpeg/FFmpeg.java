@@ -12,11 +12,15 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedExceptio
 @SuppressWarnings("unused")
 public class FFmpeg implements FFmpegInterface {
 
+    static final String DEVICE_ARCHITECTURE_X86 = "x86";
+    static final String DEVICE_ARCHITECTURE_ARMEABI_V7A = "armeabi-v7a";
+
+    private static final long MINIMUM_TIMEOUT = 10 * 1000;
+
     private final Context context;
     private FFmpegExecuteAsyncTask ffmpegExecuteAsyncTask;
     private FFmpegLoadLibraryAsyncTask ffmpegLoadLibraryAsyncTask;
 
-    private static final long MINIMUM_TIMEOUT = 10 * 1000;
     private long timeout = Long.MAX_VALUE;
 
     private static FFmpeg instance = null;
@@ -34,23 +38,23 @@ public class FFmpeg implements FFmpegInterface {
     }
 
     @Override
-    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) throws FFmpegNotSupportedException {
+    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) throws FFmpegNotSupportedException {
         String cpuArchNameFromAssets = null;
         switch (CpuArchHelper.getCpuArch()) {
             case x86:
                 Log.i("Loading FFmpeg for x86 CPU");
-                cpuArchNameFromAssets = "x86";
+                cpuArchNameFromAssets = DEVICE_ARCHITECTURE_X86;
                 break;
             case ARMv7:
                 Log.i("Loading FFmpeg for armv7 CPU");
-                cpuArchNameFromAssets = "armeabi-v7a";
+                cpuArchNameFromAssets = DEVICE_ARCHITECTURE_ARMEABI_V7A;
                 break;
             case NONE:
                 throw new FFmpegNotSupportedException("Device not supported");
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler);
+            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
             throw new FFmpegNotSupportedException("Device not supported");

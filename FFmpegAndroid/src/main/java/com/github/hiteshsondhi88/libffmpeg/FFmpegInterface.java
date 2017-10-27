@@ -13,7 +13,7 @@ interface FFmpegInterface {
      * @param ffmpegLoadBinaryResponseHandler {@link FFmpegLoadBinaryResponseHandler}
      * @throws FFmpegNotSupportedException
      */
-    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) throws FFmpegNotSupportedException;
+    void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) throws FFmpegNotSupportedException;
 
     /**
      * Executes a command
@@ -22,7 +22,7 @@ interface FFmpegInterface {
      * @param ffmpegExecuteResponseHandler {@link FFmpegExecuteResponseHandler}
      * @throws FFmpegCommandAlreadyRunningException
      */
-    public void execute(Map<String, String> environvenmentVars, String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) throws FFmpegCommandAlreadyRunningException;
+    void execute(Map<String, String> environvenmentVars, String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) throws FFmpegCommandAlreadyRunningException;
 
     /**
      * Executes a command
@@ -30,37 +30,37 @@ interface FFmpegInterface {
      * @param ffmpegExecuteResponseHandler {@link FFmpegExecuteResponseHandler}
      * @throws FFmpegCommandAlreadyRunningException
      */
-    public void execute(String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) throws FFmpegCommandAlreadyRunningException;
+    void execute(String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) throws FFmpegCommandAlreadyRunningException;
 
     /**
      * Tells FFmpeg version currently on device
      * @return FFmpeg version currently on device
      * @throws FFmpegCommandAlreadyRunningException
      */
-    public String getDeviceFFmpegVersion() throws FFmpegCommandAlreadyRunningException;
+    String getDeviceFFmpegVersion() throws FFmpegCommandAlreadyRunningException;
 
     /**
      * Tells FFmpeg version shipped with current library
      * @return FFmpeg version shipped with Library
      */
-    public String getLibraryFFmpegVersion();
+    String getLibraryFFmpegVersion();
 
     /**
      * Checks if FFmpeg command is Currently running
      * @return true if FFmpeg command is running
      */
-    public boolean isFFmpegCommandRunning();
+    boolean isFFmpegCommandRunning();
 
     /**
      * Kill Running FFmpeg process
      * @return true if process is killed successfully
      */
-    public boolean killRunningProcesses();
+    boolean killRunningProcesses();
 
     /**
      * Timeout for FFmpeg process, should be minimum of 10 seconds
      * @param timeout in milliseconds
      */
-    public void setTimeout(long timeout);
+    void setTimeout(long timeout);
 
 }

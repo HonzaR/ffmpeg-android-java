@@ -28,13 +28,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
-    androidTestCompile 'com.squareup.assertj:assertj-android:1.0.0'
 }
 
 group = GROUP

@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.io.File;
 
 class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
 
-    private static final int SUCCESS_LOAD_LIB = 600;
-    private static final int SUCCESS_LOADING_STARTED = 601;
+    private static final int SUCCESS_INITIALIZATION_DONE = 600;
+    private static final int SUCCESS_DOWNLOADING_STARTED = 601;
+    private static final int SUCCESS_DOWNLOADING_DONE = 602;
     private static final int ERROR_LIB_CAN_NOT_BE_LOADED = 610;
     private static final int ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE = 611;
     private static final int ERROR_LOAD_LIB_NO_INTERNET_CONNECTION = 612;
@@ -25,22 +25,29 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
 
     private final String cpuArchName;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
-    private final Context context;
+    private final String loadingTitle;
+    private final String loadingMsg;
     private Long downloadReference;
 
-    FFmpegLoadLibraryAsyncTask(Context context, String cpuArchNameFromAssets, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler) {
-        this.context = context;
+    FFmpegLoadLibraryAsyncTask(String cpuArchNameFromAssets,
+                               FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler,
+                               String loadingTitle,
+                               String loadingMsg)
+    {
         this.cpuArchName = cpuArchNameFromAssets;
         this.ffmpegLoadBinaryResponseHandler = ffmpegLoadBinaryResponseHandler;
+        this.loadingTitle = loadingTitle;
+        this.loadingMsg = loadingMsg;
     }
 
     @Override
     protected Integer doInBackground(Void... params)
     {
+        Context context = App.get();
         File ffmpegFile = new File(FileUtils.getFFmpeg(context));
 
         if (ffmpegFile.exists() && Util.isDeviceFFmpegVersionOld(context) && !ffmpegFile.delete()) {
-            startDownloadLibraryFile();
+            startDownloadLibraryFile(context);
         }
 
         if (!ffmpegFile.exists()) {
@@ -56,8 +63,8 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                 return ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE;
             }
 
-            startDownloadLibraryFile();
-            return SUCCESS_LOADING_STARTED;
+            startDownloadLibraryFile(context);
+            return SUCCESS_DOWNLOADING_STARTED;
         }
 
         return loadLibraryAndFinalize(ffmpegFile, true);
@@ -70,7 +77,7 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
         }
 
         if (isCopied && ffmpegFile.exists() && ffmpegFile.canExecute()) {
-            return SUCCESS_LOAD_LIB;
+            return SUCCESS_INITIALIZATION_DONE;
         } else {
             return ERROR_LIB_CAN_NOT_BE_LOADED;
         }
@@ -81,32 +88,29 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
         super.onPostExecute(state);
 
         if (ffmpegLoadBinaryResponseHandler != null) {
-            ffmpegLoadBinaryResponseHandler.onResult(state);
-
-            if (state != SUCCESS_LOADING_STARTED)
-                ffmpegLoadBinaryResponseHandler.onFinish();
+            ffmpegLoadBinaryResponseHandler.onLoadResult(state);
         }
     }
 
-    private void startDownloadLibraryFile()
+    private void startDownloadLibraryFile(Context context)
     {
         IntentFilter filter = new IntentFilter();               // set filter and register broadcast receiver
         filter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         filter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
         context.registerReceiver(downloadReceiver, filter);
 
-        String fileUrl;
-        if (cpuArchName.equals("x86")) {
+        String fileUrl = "";
+        if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_X86)) {
             fileUrl = DOWNLOAD_LIB_X86;
-        } else {
+        } else if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_ARMEABI_V7A)) {
             fileUrl = DOWNLOAD_LIB_ARM;
         }
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         request.setAllowedOverRoaming(false);
-        request.setTitle("Everyday");
-        request.setDescription("Loading app components...");
+        request.setTitle(loadingTitle);
+        request.setDescription(loadingMsg);
         request.setDestinationInExternalFilesDir(context, null, FileUtils.ffmpegFileName);
 
         downloadReference = downloadManager.enqueue(request);
@@ -137,16 +141,13 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                                 FileUtils.ffmpegFileName);
                     }
 
+                    ffmpegLoadBinaryResponseHandler.onLoadResult(SUCCESS_DOWNLOADING_DONE);
+
                     File ffmpegFile = new File(FileUtils.getFFmpeg(context));
                     int result = loadLibraryAndFinalize(ffmpegFile, isFileCopied);
 
-                    ffmpegLoadBinaryResponseHandler.onResult(result);
-                    ffmpegLoadBinaryResponseHandler.onFinish();
+                    ffmpegLoadBinaryResponseHandler.onLoadResult(result);
                 }
-
-
-            } else if (intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
-                Toast.makeText(context, "Wait please...", Toast.LENGTH_LONG).show();
             }
         }
     };

@@ -5,6 +5,7 @@ class ArmArchHelper {
         System.loadLibrary("ARM_ARCH");
     }
 
+    @SuppressWarnings("JniMissingFunction")
     native String cpuArchFromJNI();
 
     boolean isARM_v7_CPU(String cpuInfoString) {
