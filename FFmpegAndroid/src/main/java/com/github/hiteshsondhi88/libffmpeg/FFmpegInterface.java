@@ -3,7 +3,6 @@ package com.github.hiteshsondhi88.libffmpeg;
 import java.util.Map;
 
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 @SuppressWarnings("unused")
 interface FFmpegInterface {
@@ -11,9 +10,8 @@ interface FFmpegInterface {
     /**
      * Load binary to the device according to archituecture. This also updates FFmpeg binary if the binary on device have old version.
      * @param ffmpegLoadBinaryResponseHandler {@link FFmpegLoadBinaryResponseHandler}
-     * @throws FFmpegNotSupportedException
      */
-    void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) throws FFmpegNotSupportedException;
+    void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg);
 
     /**
      * Executes a command

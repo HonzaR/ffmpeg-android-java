@@ -7,13 +7,20 @@ import java.lang.reflect.Array;
 import java.util.Map;
 
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 @SuppressWarnings("unused")
 public class FFmpeg implements FFmpegInterface {
 
     static final String DEVICE_ARCHITECTURE_X86 = "x86";
     static final String DEVICE_ARCHITECTURE_ARMEABI_V7A = "armeabi-v7a";
+
+    public static final int SUCCESS_INITIALIZATION_DONE = 600;
+    public static final int SUCCESS_DOWNLOADING_STARTED = 601;
+    public static final int SUCCESS_DOWNLOADING_DONE = 602;
+    public static final int ERROR_LIB_CAN_NOT_BE_LOADED = 610;
+    public static final int ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE = 611;
+    public static final int ERROR_LOAD_LIB_NO_INTERNET_CONNECTION = 612;
+    public static final int ERROR_DEVICE_NOT_SUPPORTED = 613;
 
     private static final long MINIMUM_TIMEOUT = 10 * 1000;
 
@@ -38,7 +45,7 @@ public class FFmpeg implements FFmpegInterface {
     }
 
     @Override
-    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) throws FFmpegNotSupportedException {
+    public void loadBinary(FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg) {
         String cpuArchNameFromAssets = null;
         switch (CpuArchHelper.getCpuArch()) {
             case x86:
@@ -50,14 +57,14 @@ public class FFmpeg implements FFmpegInterface {
                 cpuArchNameFromAssets = DEVICE_ARCHITECTURE_ARMEABI_V7A;
                 break;
             case NONE:
-                throw new FFmpegNotSupportedException("Device not supported");
+                ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
             ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
-            throw new FFmpegNotSupportedException("Device not supported");
+            ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);
         }
     }
 
