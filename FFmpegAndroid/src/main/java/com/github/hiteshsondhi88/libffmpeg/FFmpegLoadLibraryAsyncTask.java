@@ -56,10 +56,14 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                 return ERROR_LOAD_LIB_NO_INTERNET_CONNECTION;
             }
 
-            long freeSpace = Util.BToMB(Util.getStorageFreeSpace(context.getFilesDir()));
+            long externalFreeSpace = Util.BToMB(Util.getStorageFreeSpace(context.getExternalFilesDir(null)));
+            long internalFreeSpace = Util.BToMB(Util.getStorageFreeSpace(context.getFilesDir()));
             long neededMemorySize = NEEDED_FREE_MEMORY_SPACE;
 
-            if (neededMemorySize >= freeSpace) {   // not enough free space
+            if (neededMemorySize >= externalFreeSpace) {   // not enough free space
+                return ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE;
+            }
+            if (neededMemorySize >= internalFreeSpace) {   // not enough free space
                 return ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE;
             }
 
@@ -111,7 +115,7 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
         request.setAllowedOverRoaming(false);
         request.setTitle(loadingTitle);
         request.setDescription(loadingMsg);
-        request.setDestinationInExternalFilesDir(context, null, FileUtils.ffmpegFileName);
+        request.setDestinationInExternalFilesDir(context, null, FileUtils.FFMPEG_FILE_NAME);
 
         downloadReference = downloadManager.enqueue(request);
     }
@@ -131,16 +135,17 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                 long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
 
                 if (referenceId == downloadReference) {
-                    File downloaded = new File(context.getExternalFilesDir(null) + "/" + FileUtils.ffmpegFileName);
+                    File downloaded = new File(context.getExternalFilesDir(null) + "/" + FileUtils.FFMPEG_FILE_NAME);
 
                     if (FileUtils.checkFileExists(downloaded) && downloaded.length() > 0) {
 
                         isFileCopied = FileUtils.copyBinaryFromExternalToData(
                                 context,
-                                FileUtils.ffmpegFileName,
-                                FileUtils.ffmpegFileName);
+                                FileUtils.FFMPEG_FILE_NAME,
+                                FileUtils.FFMPEG_FILE_NAME);
                     }
 
+                    FileUtils.removeFromExternal(App.get());
                     ffmpegLoadBinaryResponseHandler.onLoadResult(SUCCESS_DOWNLOADING_DONE);
 
                     File ffmpegFile = new File(FileUtils.getFFmpeg(context));

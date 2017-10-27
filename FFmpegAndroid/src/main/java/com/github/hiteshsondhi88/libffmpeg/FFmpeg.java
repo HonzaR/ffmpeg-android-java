@@ -32,14 +32,14 @@ public class FFmpeg implements FFmpegInterface {
 
     private static FFmpeg instance = null;
 
-    private FFmpeg(Context context) {
-        this.context = context.getApplicationContext();
+    private FFmpeg() {
+        this.context = App.get();
         Log.setDEBUG(Util.isDebug(this.context));
     }
 
-    public static FFmpeg getInstance(Context context) {
+    public static FFmpeg getInstance() {
         if (instance == null) {
-            instance = new FFmpeg(context);
+            instance = new FFmpeg();
         }
         return instance;
     }

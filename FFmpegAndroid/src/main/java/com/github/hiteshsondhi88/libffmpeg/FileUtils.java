@@ -15,18 +15,18 @@ import java.util.Map;
 
 class FileUtils {
 
-    static final String ffmpegFileName = "ffmpeg";
+    static final String FFMPEG_FILE_NAME = "ffmpeg";
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
 
-    static boolean copyBinaryFromExternalToData(Context context, String fileNameFromExternal, String outputFileName) {
+    static boolean copyBinaryFromExternalToData(Context c, String fileNameFromExternal, String outputFileName) {
 		
 		// create files directory under /data/data/package name
-		File filesDirectory = getFilesDirectory(context);
+		File filesDirectory = getFilesDirectory(c);
 		
 		InputStream is;
 		try {
-			File externalFile = new File(context.getExternalFilesDir(null) + "/" + fileNameFromExternal);
+			File externalFile = new File(c.getExternalFilesDir(null) + "/" + fileNameFromExternal);
 			is = new FileInputStream(externalFile);
 			final FileOutputStream os = new FileOutputStream(new File(filesDirectory, outputFileName));
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
@@ -46,6 +46,11 @@ class FileUtils {
         return false;
 	}
 
+    static void removeFromExternal(Context c)
+    {
+        (new File(c.getExternalFilesDir(null), FFMPEG_FILE_NAME)).delete();
+    }
+
     static boolean checkFileExists(File file) {
         try {
             if(file.exists()) {
@@ -64,7 +69,7 @@ class FileUtils {
 	}
 
     static String getFFmpeg(Context context) {
-        return getFilesDirectory(context).getAbsolutePath() + File.separator + FileUtils.ffmpegFileName;
+        return getFilesDirectory(context).getAbsolutePath() + File.separator + FFMPEG_FILE_NAME;
     }
 
     static String getFFmpeg(Context context, Map<String,String> environmentVars) {
