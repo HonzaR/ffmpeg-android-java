@@ -10,14 +10,14 @@ import android.os.AsyncTask;
 
 import java.io.File;
 
-class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
+public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
 
-    private static final int SUCCESS_INITIALIZATION_DONE = 600;
-    private static final int SUCCESS_DOWNLOADING_STARTED = 601;
-    private static final int SUCCESS_DOWNLOADING_DONE = 602;
-    private static final int ERROR_LIB_CAN_NOT_BE_LOADED = 610;
-    private static final int ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE = 611;
-    private static final int ERROR_LOAD_LIB_NO_INTERNET_CONNECTION = 612;
+    public static final int SUCCESS_INITIALIZATION_DONE = 600;
+    public static final int SUCCESS_DOWNLOADING_STARTED = 601;
+    public static final int SUCCESS_DOWNLOADING_DONE = 602;
+    public static final int ERROR_LIB_CAN_NOT_BE_LOADED = 610;
+    public static final int ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE = 611;
+    public static final int ERROR_LOAD_LIB_NO_INTERNET_CONNECTION = 612;
 
     private static final long NEEDED_FREE_MEMORY_SPACE = 50L;
     private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";

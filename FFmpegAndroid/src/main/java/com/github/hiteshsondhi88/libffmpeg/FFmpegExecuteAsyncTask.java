@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeoutException;
 
-class FFmpegExecuteAsyncTask extends AsyncTask<Void, String, CommandResult> {
+public class FFmpegExecuteAsyncTask extends AsyncTask<Void, String, CommandResult> {
 
     private final String[] cmd;
     private final FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler;
