@@ -43,7 +43,7 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected Integer doInBackground(Void... params)
     {
-        Context context = App.get();
+        Context context = App.get().getApplicationContext();
         File ffmpegFile = new File(FileUtils.getFFmpeg(context));
 
         if (ffmpegFile.exists() && Util.isDeviceFFmpegVersionOld(context) && !ffmpegFile.delete()) {
@@ -145,7 +145,7 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                                 FileUtils.FFMPEG_FILE_NAME);
                     }
 
-                    FileUtils.removeFromExternal(App.get());
+                    FileUtils.removeFromExternal(App.get().getApplicationContext());
                     ffmpegLoadBinaryResponseHandler.onLoadResult(SUCCESS_DOWNLOADING_DONE);
 
                     File ffmpegFile = new File(FileUtils.getFFmpeg(context));

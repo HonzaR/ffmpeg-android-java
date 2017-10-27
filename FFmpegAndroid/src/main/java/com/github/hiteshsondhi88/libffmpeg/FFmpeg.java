@@ -33,7 +33,7 @@ public class FFmpeg implements FFmpegInterface {
     private static FFmpeg instance = null;
 
     private FFmpeg() {
-        this.context = App.get();
+        this.context = App.get().getApplicationContext();
         Log.setDEBUG(Util.isDebug(this.context));
     }
 
