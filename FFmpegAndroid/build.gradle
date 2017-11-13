@@ -30,6 +30,14 @@ android {
     }
 
     buildToolsVersion '26.0.2'
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi', 'armeabi-v7a', 'x86'
+        }
+    }
 }
 
 dependencies {
