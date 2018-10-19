@@ -20,8 +20,12 @@ import static com.github.hiteshsondhi88.libffmpeg.FFmpeg.SUCCESS_INITIALIZATION_
 public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
 
     private static final long NEEDED_FREE_MEMORY_SPACE = 50L;
-    private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";
-    private static final String DOWNLOAD_LIB_ARM = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9nZ1d2NnRydHpwc1U&export=download";
+
+    //private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";
+    //private static final String DOWNLOAD_LIB_ARM = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9nZ1d2NnRydHpwc1U&export=download";
+
+    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/everyday-c1985.appspot.com/o/public%2Flibs%2Fffmpeg_x86?alt=media&token=7725b97e-0e30-4efe-a41e-434226e42e27";
+    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/everyday-c1985.appspot.com/o/public%2Flibs%2Fffmpeg_armeabi-v7a?alt=media&token=05faea50-56b7-43b1-96b4-4093da95c7e8";
 
     private final String cpuArchName;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
