@@ -52,15 +52,12 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     {
         File ffmpegFile = new File(FileUtils.getFFmpeg(context));
 
+        // just for sure, we can download better ffmpeg
         if (ffmpegFile.exists() && Util.isDeviceFFmpegVersionOld(context) && !ffmpegFile.delete()) {
             startDownloadLibraryFile(context);
         }
 
         if (!ffmpegFile.exists()) {
-
-            if (!Util.checkInternetConnection(context)) {
-                return ERROR_LOAD_LIB_NO_INTERNET_CONNECTION;
-            }
 
             long externalFreeSpace = Util.BToMB(Util.getStorageFreeSpace(context.getExternalFilesDir(null)));
             long internalFreeSpace = Util.BToMB(Util.getStorageFreeSpace(context.getFilesDir()));
@@ -73,24 +70,32 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                 return ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE;
             }
 
+            boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
+                    cpuArchName + File.separator + FileUtils.FFMPEG_FILE_NAME,
+                    FileUtils.FFMPEG_FILE_NAME);
+
+            if (isFileCopied && loadLibraryAndFinalize(ffmpegFile, true)) {
+                return SUCCESS_INITIALIZATION_DONE;
+            }
+
+            if (!Util.checkInternetConnection(context)) {
+                return ERROR_LOAD_LIB_NO_INTERNET_CONNECTION;
+            }
+
             startDownloadLibraryFile(context);
             return SUCCESS_DOWNLOADING_STARTED;
         }
 
-        return loadLibraryAndFinalize(ffmpegFile, true);
+        return loadLibraryAndFinalize(ffmpegFile, true) ? SUCCESS_INITIALIZATION_DONE : ERROR_LIB_CAN_NOT_BE_LOADED;
     }
 
-    private int loadLibraryAndFinalize(File ffmpegFile, boolean isCopied)
+    private boolean loadLibraryAndFinalize(File ffmpegFile, boolean isCopied)
     {
         if(!ffmpegFile.canExecute()) {
             ffmpegFile.setExecutable(true);
         }
 
-        if (isCopied && ffmpegFile.exists() && ffmpegFile.canExecute()) {
-            return SUCCESS_INITIALIZATION_DONE;
-        } else {
-            return ERROR_LIB_CAN_NOT_BE_LOADED;
-        }
+        return isCopied && ffmpegFile.exists() && ffmpegFile.canExecute();
     }
 
     @Override
@@ -155,9 +160,9 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                     ffmpegLoadBinaryResponseHandler.onLoadResult(SUCCESS_DOWNLOADING_DONE);
 
                     File ffmpegFile = new File(FileUtils.getFFmpeg(context));
-                    int result = loadLibraryAndFinalize(ffmpegFile, isFileCopied);
+                    boolean result = loadLibraryAndFinalize(ffmpegFile, isFileCopied);
 
-                    ffmpegLoadBinaryResponseHandler.onLoadResult(result);
+                    ffmpegLoadBinaryResponseHandler.onLoadResult(result ? SUCCESS_INITIALIZATION_DONE : ERROR_LIB_CAN_NOT_BE_LOADED);
                 }
             }
         }
