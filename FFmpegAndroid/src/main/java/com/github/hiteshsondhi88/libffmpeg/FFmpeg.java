@@ -30,16 +30,23 @@ public class FFmpeg implements FFmpegInterface {
 
     private long timeout = Long.MAX_VALUE;
 
-    private static FFmpeg instance = null;
+    private static FFmpeg firstInstance = null;
+    private static FFmpeg secondInstance = null;
 
     private FFmpeg() {
     }
 
-    public static FFmpeg getInstance() {
-        if (instance == null) {
-            instance = new FFmpeg();
+    public static FFmpeg getFirstInstance() {
+        if (firstInstance == null) {
+            firstInstance = new FFmpeg();
         }
-        return instance;
+        return firstInstance;
+    }
+    public static FFmpeg getSecondInstance() {
+        if (secondInstance == null) {
+            secondInstance = new FFmpeg();
+        }
+        return secondInstance;
     }
 
     @Override
