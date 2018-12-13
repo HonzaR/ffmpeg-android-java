@@ -3,10 +3,10 @@ package com.github.hiteshsondhi88.libffmpeg;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+
 import java.lang.reflect.Array;
 import java.util.Map;
-
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 @SuppressWarnings("unused")
 public class FFmpeg implements FFmpegInterface {
@@ -127,12 +127,21 @@ public class FFmpeg implements FFmpegInterface {
 
     @Override
     public boolean isFFmpegCommandRunning() {
-        return ffmpegExecuteAsyncTask != null && !ffmpegExecuteAsyncTask.isProcessCompleted();
+        return ffmpegExecuteAsyncTask != null
+                && !ffmpegExecuteAsyncTask.isProcessCompleted()
+                && ffmpegExecuteAsyncTask.isRunning();
     }
 
     @Override
     public boolean killRunningProcesses() {
-        return Util.killAsync(ffmpegLoadLibraryAsyncTask) || Util.killAsync(ffmpegExecuteAsyncTask);
+
+        if (ffmpegLoadLibraryAsyncTask != null && ffmpegLoadLibraryAsyncTask.isRunning())
+            return ffmpegLoadLibraryAsyncTask.stop();
+
+        if (ffmpegExecuteAsyncTask != null && ffmpegExecuteAsyncTask.isRunning())
+            return ffmpegExecuteAsyncTask.stop();
+
+        return true;
     }
 
     @Override

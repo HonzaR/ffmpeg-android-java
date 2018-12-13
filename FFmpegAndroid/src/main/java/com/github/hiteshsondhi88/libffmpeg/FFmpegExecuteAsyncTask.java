@@ -102,8 +102,16 @@ public class FFmpegExecuteAsyncTask extends AsyncTask<Void, String, CommandResul
         }
     }
 
+    boolean isRunning() {
+        return this.getStatus() == Status.PENDING || this.getStatus() == Status.RUNNING;
+    }
+
     boolean isProcessCompleted() {
         return Util.isProcessCompleted(process);
     }
 
+    boolean stop() {
+        boolean res = this.cancel(true);
+        return res && Util.stopFFmpegProcess(process);
+    }
 }

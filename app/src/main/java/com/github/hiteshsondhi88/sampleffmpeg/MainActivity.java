@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
     {
         this.callbacksLoad = callbacksLoad;
         try {
-            ffmpeg = FFmpeg.getInstance();
+            ffmpeg = FFmpeg.getFirstInstance();
             ffmpeg.loadBinary(
                     MainActivity.this,
                     loadBinaryResponseHandler,

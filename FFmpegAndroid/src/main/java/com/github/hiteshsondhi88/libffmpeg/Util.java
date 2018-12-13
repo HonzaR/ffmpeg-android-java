@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 
 class Util {
 
@@ -122,5 +123,28 @@ class Util {
     static boolean isDeviceFFmpegVersionOld(Context context)
     {
         return CpuArch.fromString(FileUtils.SHA1(FileUtils.getFFmpeg(context))).equals(CpuArch.NONE);
+    }
+
+    static boolean stopFFmpegProcess(Process process)
+    {
+        int pid = getPid(process);
+
+        android.os.Process.sendSignal(pid, 15); // 15 is the value for SIG_TERM
+        return true;
+    }
+
+    static int getPid(java.lang.Process p)
+    {
+        int pid = -1;
+
+        try {
+            Field f = p.getClass().getDeclaredField("pid");
+            f.setAccessible(true);
+            pid = f.getInt(p);
+            f.setAccessible(false);
+        } catch (Throwable e) {
+            pid = -1;
+        }
+        return pid;
     }
 }

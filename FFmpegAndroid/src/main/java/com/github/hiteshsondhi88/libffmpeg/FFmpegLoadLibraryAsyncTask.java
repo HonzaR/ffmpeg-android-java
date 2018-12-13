@@ -107,6 +107,14 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
         }
     }
 
+    boolean isRunning() {
+        return this.getStatus() == Status.PENDING || this.getStatus() == Status.RUNNING;
+    }
+
+    boolean stop() {
+        return this.cancel(true);
+    }
+
     private void startDownloadLibraryFile(Context context)
     {
         IntentFilter filter = new IntentFilter();               // set filter and register broadcast receiver
