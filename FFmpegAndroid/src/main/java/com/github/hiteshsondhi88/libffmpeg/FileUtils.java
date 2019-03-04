@@ -21,16 +21,16 @@ class FileUtils {
 
     static boolean checkAssetFileExists(Context context, String fileNameFromAssets)
     {
-        InputStream is;
+        InputStream is = null;
         try {
             is = context.getApplicationContext().getAssets().open(fileNameFromAssets);
             return true;
         } catch (IOException e) {
-            Log.e("Asset file does not exist!", e);
+            Log.i("Asset file does not exist!", e);
             return false;
         } finally {
             if (is != null) {
-                is.close();
+                try { is.close(); } catch (IOException e) {}
             }
         }
     }
