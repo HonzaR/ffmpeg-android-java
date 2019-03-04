@@ -26,7 +26,7 @@ class FileUtils {
             is = context.getApplicationContext().getAssets().open(fileNameFromAssets);
             return true;
         } catch (IOException e) {
-            Log.i("Asset file does not exist!", e);
+            Log.i("Asset file does not exist!");
             return false;
         } finally {
             if (is != null) {
