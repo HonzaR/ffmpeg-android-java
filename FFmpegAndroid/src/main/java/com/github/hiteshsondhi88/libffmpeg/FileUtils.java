@@ -19,6 +19,22 @@ class FileUtils {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
 
+    static boolean checkAssetFileExists(Context context, String fileNameFromAssets)
+    {
+        InputStream is;
+        try {
+            is = context.getApplicationContext().getAssets().open(fileNameFromAssets);
+            return true;
+        } catch (IOException e) {
+            Log.e("Asset file does not exist!", e);
+            return false;
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
+
     static boolean copyBinaryFromAssetsToData(Context context, String fileNameFromAssets, String outputFileName) {
 
         // create files directory under /data/data/package name

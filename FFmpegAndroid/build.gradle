@@ -7,7 +7,6 @@ version = VERSION_NAME
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion as Integer
-    buildToolsVersion rootProject.ext.buildToolsVersion as String
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion as Integer
@@ -28,8 +27,6 @@ android {
         }
     }
 
-    buildToolsVersion '26.0.2'
-
     splits {
         abi {
             enable true
@@ -40,7 +37,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 group = GROUP

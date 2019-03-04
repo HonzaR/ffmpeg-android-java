@@ -24,8 +24,8 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     //private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";
     //private static final String DOWNLOAD_LIB_ARM = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9nZ1d2NnRydHpwc1U&export=download";
 
-    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/everyday-c1985.appspot.com/o/public%2Flibs%2Fffmpeg_x86?alt=media&token=7725b97e-0e30-4efe-a41e-434226e42e27";
-    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/everyday-c1985.appspot.com/o/public%2Flibs%2Fffmpeg_armeabi-v7a?alt=media&token=05faea50-56b7-43b1-96b4-4093da95c7e8";
+    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/sms-handler-9c4c6.appspot.com/o/libs%2Fffmpeg_x86?alt=media&token=b1243c99-cc36-40ca-a157-c7d69f542b3d";
+    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/sms-handler-9c4c6.appspot.com/o/libs%2Fffmpeg_armeabi-v7a?alt=media&token=d7585795-4e3c-4f2c-a3da-a9be3a320c35";
 
     private final String cpuArchName;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
@@ -70,9 +70,9 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
                 return ERROR_LOAD_LIB_NOT_ENOUGH_FREE_SPACE;
             }
 
-            boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
-                    cpuArchName + File.separator + FileUtils.FFMPEG_FILE_NAME,
-                    FileUtils.FFMPEG_FILE_NAME);
+            String assetName = cpuArchName + File.separator + FileUtils.FFMPEG_FILE_NAME;
+
+            boolean isFileCopied = FileUtils.checkAssetFileExists(context, assetName) && FileUtils.copyBinaryFromAssetsToData(context, cpuArchName + File.separator + FileUtils.FFMPEG_FILE_NAME, FileUtils.FFMPEG_FILE_NAME);
 
             if (isFileCopied && loadLibraryAndFinalize(ffmpegFile, true)) {
                 return SUCCESS_INITIALIZATION_DONE;
