@@ -28,7 +28,10 @@ public class MainActivity extends Activity {
                     MainActivity.this,
                     loadBinaryResponseHandler,
                     title,
-                    message);
+                    message,
+                    new String[] {
+                            "x86_download_link",
+                            "armeabi_v7a_download_link"});
 
         } catch (Exception e) {
             Log.e("FFMPEG", e.toString());

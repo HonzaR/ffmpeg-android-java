@@ -2,9 +2,9 @@ package com.github.hiteshsondhi88.libffmpeg;
 
 import android.content.Context;
 
-import java.util.Map;
-
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+
+import java.util.Map;
 
 @SuppressWarnings("unused")
 interface FFmpegInterface {
@@ -13,7 +13,7 @@ interface FFmpegInterface {
      * Load binary to the device according to archituecture. This also updates FFmpeg binary if the binary on device have old version.
      * @param ffmpegLoadBinaryResponseHandler {@link FFmpegLoadBinaryResponseHandler}
      */
-    void loadBinary(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg);
+    void loadBinary(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg, String[] remoteLibsLinks);
 
     /**
      * Executes a command

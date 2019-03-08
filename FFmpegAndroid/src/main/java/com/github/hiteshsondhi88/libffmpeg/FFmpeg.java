@@ -50,7 +50,7 @@ public class FFmpeg implements FFmpegInterface {
     }
 
     @Override
-    public void loadBinary(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg)
+    public void loadBinary(Context context, FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler, String loadingTitle, String loadingMsg, String[] remoteLibsLinks)
     {
         this.context = context;
         Log.setDEBUG(Util.isDebug(this.context));
@@ -70,7 +70,7 @@ public class FFmpeg implements FFmpegInterface {
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
+            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg, remoteLibsLinks);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
             ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);

@@ -21,30 +21,27 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
 
     private static final long NEEDED_FREE_MEMORY_SPACE = 50L;
 
-    //private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";
-    //private static final String DOWNLOAD_LIB_ARM = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9nZ1d2NnRydHpwc1U&export=download";
-
-    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/viaphone-6bff2.appspot.com/o/libs%2Fffmpeg_armeabi-v7a?alt=media&token=ddb305d1-c125-4e2a-bd4c-367e367ebb4f";
-    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/viaphone-6bff2.appspot.com/o/libs%2Fffmpeg_x86?alt=media&token=f413b6a0-7deb-414e-8e83-43573da29c58";
-
     private final String cpuArchName;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
     private final String loadingTitle;
     private final String loadingMsg;
     private final Context context;
+    private final String[] remoteLibsLinks;
     private Long downloadReference;
 
     FFmpegLoadLibraryAsyncTask(Context context,
                                String cpuArchNameFromAssets,
                                FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler,
                                String loadingTitle,
-                               String loadingMsg)
+                               String loadingMsg,
+                               String[] remoteLibsLinks)
     {
         this.context = context;
         this.cpuArchName = cpuArchNameFromAssets;
         this.ffmpegLoadBinaryResponseHandler = ffmpegLoadBinaryResponseHandler;
         this.loadingTitle = loadingTitle;
         this.loadingMsg = loadingMsg;
+        this.remoteLibsLinks = remoteLibsLinks;
     }
 
     @Override
@@ -123,10 +120,10 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
         context.registerReceiver(downloadReceiver, filter);
 
         String fileUrl = "";
-        if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_X86)) {
-            fileUrl = DOWNLOAD_LIB_X86;
-        } else if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_ARMEABI_V7A)) {
-            fileUrl = DOWNLOAD_LIB_ARM;
+        if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_X86) && remoteLibsLinks != null && remoteLibsLinks[0] != null) {
+            fileUrl = remoteLibsLinks[0];
+        } else if (cpuArchName.equals(FFmpeg.DEVICE_ARCHITECTURE_ARMEABI_V7A) && remoteLibsLinks != null && remoteLibsLinks[1] != null) {
+            fileUrl = remoteLibsLinks[1];
         }
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
