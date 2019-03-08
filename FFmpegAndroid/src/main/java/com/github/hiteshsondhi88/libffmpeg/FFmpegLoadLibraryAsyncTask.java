@@ -24,8 +24,8 @@ public class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Integer> {
     //private static final String DOWNLOAD_LIB_X86 = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9ncm4yd0x1Y1pKZEU&export=download";
     //private static final String DOWNLOAD_LIB_ARM = "https://drive.google.com/uc?authuser=0&id=0B6oNTFuzvl9nZ1d2NnRydHpwc1U&export=download";
 
-    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/sms-handler-9c4c6.appspot.com/o/libs%2Fffmpeg_x86?alt=media&token=b1243c99-cc36-40ca-a157-c7d69f542b3d";
-    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/sms-handler-9c4c6.appspot.com/o/libs%2Fffmpeg_armeabi-v7a?alt=media&token=d7585795-4e3c-4f2c-a3da-a9be3a320c35";
+    private static final String DOWNLOAD_LIB_X86 = "https://firebasestorage.googleapis.com/v0/b/viaphone-6bff2.appspot.com/o/libs%2Fffmpeg_armeabi-v7a?alt=media&token=ddb305d1-c125-4e2a-bd4c-367e367ebb4f";
+    private static final String DOWNLOAD_LIB_ARM = "https://firebasestorage.googleapis.com/v0/b/viaphone-6bff2.appspot.com/o/libs%2Fffmpeg_x86?alt=media&token=f413b6a0-7deb-414e-8e83-43573da29c58";
 
     private final String cpuArchName;
     private final FFmpegLoadBinaryResponseHandler ffmpegLoadBinaryResponseHandler;
