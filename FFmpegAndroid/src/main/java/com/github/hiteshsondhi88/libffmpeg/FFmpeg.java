@@ -11,8 +11,8 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class FFmpeg implements FFmpegInterface {
 
-    static final String DEVICE_ARCHITECTURE_X86 = "x86";
     static final String DEVICE_ARCHITECTURE_ARMEABI_V7A = "armeabi-v7a";
+    static final String DEVICE_ARCHITECTURE_ARMEABI_V8A = "arm64-v8a";
 
     public static final int SUCCESS_INITIALIZATION_DONE = 600;
     public static final int SUCCESS_DOWNLOADING_STARTED = 601;
@@ -26,7 +26,6 @@ public class FFmpeg implements FFmpegInterface {
 
     private Context context;
     private FFmpegExecuteAsyncTask ffmpegExecuteAsyncTask;
-    private FFmpegLoadLibraryAsyncTask ffmpegLoadLibraryAsyncTask;
 
     private long timeout = Long.MAX_VALUE;
 
@@ -57,20 +56,20 @@ public class FFmpeg implements FFmpegInterface {
 
         String cpuArchNameFromAssets = null;
         switch (CpuArchHelper.getCpuArch()) {
-            case x86:
-                Log.i("Loading FFmpeg for x86 CPU");
-                cpuArchNameFromAssets = DEVICE_ARCHITECTURE_X86;
-                break;
             case ARMv7:
                 Log.i("Loading FFmpeg for armv7 CPU");
                 cpuArchNameFromAssets = DEVICE_ARCHITECTURE_ARMEABI_V7A;
+                break;
+            case ARMv8:
+                Log.i("Loading FFmpeg for armv8 CPU");
+                cpuArchNameFromAssets = DEVICE_ARCHITECTURE_ARMEABI_V8A;
                 break;
             case NONE:
                 ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);
         }
 
         if (!TextUtils.isEmpty(cpuArchNameFromAssets)) {
-            ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler, loadingTitle, loadingMsg);
+            FFmpegLoadLibraryAsyncTask ffmpegLoadLibraryAsyncTask = new FFmpegLoadLibraryAsyncTask(context, cpuArchNameFromAssets, ffmpegLoadBinaryResponseHandler);
             ffmpegLoadLibraryAsyncTask.execute();
         } else {
             ffmpegLoadBinaryResponseHandler.onLoadResult(ERROR_DEVICE_NOT_SUPPORTED);
@@ -134,9 +133,6 @@ public class FFmpeg implements FFmpegInterface {
 
     @Override
     public boolean killRunningProcesses() {
-
-        if (ffmpegLoadLibraryAsyncTask != null && ffmpegLoadLibraryAsyncTask.isRunning())
-            return ffmpegLoadLibraryAsyncTask.stop();
 
         if (ffmpegExecuteAsyncTask != null && ffmpegExecuteAsyncTask.isRunning())
             return ffmpegExecuteAsyncTask.stop();

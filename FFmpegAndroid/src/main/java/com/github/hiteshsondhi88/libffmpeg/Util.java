@@ -122,7 +122,7 @@ class Util {
 
     static boolean isDeviceFFmpegVersionOld(Context context)
     {
-        return CpuArch.fromString(FileUtils.SHA1(FileUtils.getFFmpeg(context))).equals(CpuArch.NONE);
+        return false;//CpuArch.fromString(FileUtils.SHA1(FileUtils.getFFmpeg(context))).equals(CpuArch.NONE);
     }
 
     static boolean stopFFmpegProcess(Process process)
